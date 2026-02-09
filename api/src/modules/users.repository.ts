@@ -13,7 +13,7 @@ interface UserRow extends QueryResultRow {
 }
 
 @Injectable()
-export class UserRepository {
+export class UsersRepository {
   constructor(private readonly db: DatabaseService) {}
 
   async findByEmail(email: string): Promise<UserRow | null> {
