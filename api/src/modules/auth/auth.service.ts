@@ -48,7 +48,7 @@ export class AuthService {
       await client.query(
         `
         INSERT INTO memberships (organization_id, user_id, role)
-        VALUES ($1, $2, "admin")
+        VALUES ($1, $2, 'admin')
         RETURNING *`,
         [org.id, user.id],
       );

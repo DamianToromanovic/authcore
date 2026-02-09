@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // wirft 400 sobald ein feld existiert was nicht im DTO ist
     }),
   );
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(process.env.PORT ?? 3000);
 }
