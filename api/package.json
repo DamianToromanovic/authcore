@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:up": "dbmate --env-file ../.env.db --migrations-dir ../migrations up",
+    "db:down": "dbmate --env-file ../.env.db --migrations-dir ../migrations down",
+    "db:new": "dbmate --env-file ../.env.db --migrations-dir ../migrations new"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -38,6 +41,7 @@
     "@types/node": "^22.10.7",
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.2",
+    "dbmate": "^2.29.5",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

@@ -57,6 +57,9 @@ importers:
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.3
+      dbmate:
+        specifier: ^2.29.5
+        version: 2.29.5
       eslint:
         specifier: ^9.18.0
         version: 9.39.2
@@ -308,6 +311,41 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@dbmate/darwin-arm64@2.29.5':
+    resolution: {integrity: sha512-JlI+yKitV2C8B73sqli+IQsNnxVHZYgzJxoFRIQCyHHAkFE5FJ/6NJMs4qFI195F4H3KPE//Pvj3Gvk3cgmrJw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@dbmate/darwin-x64@2.29.5':
+    resolution: {integrity: sha512-7VXSYKLTC7+kDCFuFJIQlDjrPTIEwrkOAjp1Y6VYDX/Vk6M7EfOf8/vxRJmjzDskB9JKuTfpAyIUFn3ByTDIRg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@dbmate/linux-arm64@2.29.5':
+    resolution: {integrity: sha512-nr6Bzd1qFhgC8ZxVoD/3vNeXWW83OMNFzuvjq8LXhrXyGPfkWaN7XJnFQfU+i3GFgj6mba6teQlIHN9hTc7pjg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@dbmate/linux-arm@2.29.5':
+    resolution: {integrity: sha512-1xHtMSpgntUO9fh4GyHMG7fkgSLrVo86pWBVytTHZf6YSblskWS8yKfV/29Gy6nfLdmvTzzg5wDW61ScJddaVA==}
+    cpu: [arm]
+    os: [linux]
+
+  '@dbmate/linux-ia32@2.29.5':
+    resolution: {integrity: sha512-BTzU27zEyg2aazUzA5eW0ojD/jS2YDXENJNqFU7uwJb5kGCZmhHH0ZrMWL8FahA8n7qNWZVoc8tl3SshCm0VfA==}
+    cpu: [ia32]
+    os: [linux]
+
+  '@dbmate/linux-x64@2.29.5':
+    resolution: {integrity: sha512-NBMFbBgwuOtnLhZL/5h5lsLOvnXE1eloIO9Cp8uc+yrXwpAZW8KUoj5M+QKRZiFO4OuPJk8qy42lt0SDVkJLyg==}
+    cpu: [x64]
+    os: [linux]
+
+  '@dbmate/win32-x64@2.29.5':
+    resolution: {integrity: sha512-jc8626mtd7oLJwlPVQx3NNfUlhSDn1MfVNK9NC708eo4dW9G2thyUhbn5+6DAWw3R5eFuL5Uoh8xVkZCPRW/2Q==}
+    cpu: [x64]
+    os: [win32]
 
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
@@ -1422,6 +1460,10 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  dbmate@2.29.5:
+    resolution: {integrity: sha512-H15wWVaE72wogqL9K3KFzRHlsvyCK3ES7Le5KskqXSuZRkLMldSmeiaBM5X8V3AAOSaxykpqj0REe1tdagHv9A==}
+    hasBin: true
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -3283,6 +3325,27 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
+  '@dbmate/darwin-arm64@2.29.5':
+    optional: true
+
+  '@dbmate/darwin-x64@2.29.5':
+    optional: true
+
+  '@dbmate/linux-arm64@2.29.5':
+    optional: true
+
+  '@dbmate/linux-arm@2.29.5':
+    optional: true
+
+  '@dbmate/linux-ia32@2.29.5':
+    optional: true
+
+  '@dbmate/linux-x64@2.29.5':
+    optional: true
+
+  '@dbmate/win32-x64@2.29.5':
+    optional: true
+
   '@emnapi/core@1.8.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
@@ -4563,6 +4626,16 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  dbmate@2.29.5:
+    optionalDependencies:
+      '@dbmate/darwin-arm64': 2.29.5
+      '@dbmate/darwin-x64': 2.29.5
+      '@dbmate/linux-arm': 2.29.5
+      '@dbmate/linux-arm64': 2.29.5
+      '@dbmate/linux-ia32': 2.29.5
+      '@dbmate/linux-x64': 2.29.5
+      '@dbmate/win32-x64': 2.29.5
 
   debug@4.4.3:
     dependencies:
