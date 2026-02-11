@@ -2,6 +2,13 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 
+export interface DbClient {
+  query<T extends QueryResultRow = any>(
+    text: string,
+    params?: any[],
+  ): Promise<QueryResult<T>>;
+}
+
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private pool: Pool;
