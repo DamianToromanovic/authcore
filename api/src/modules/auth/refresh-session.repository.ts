@@ -39,8 +39,9 @@ export class RefreshSessionRepository {
 
   async findActiveSessionById(
     sessionId: string,
+    client: DbClient,
   ): Promise<RefreshSessionRow | null> {
-    const result = await this.db.query<RefreshSessionRow>(
+    const result = await this.getClient(client).query<RefreshSessionRow>(
       `
       SELECT *
       FROM refresh_sessions
@@ -51,5 +52,28 @@ export class RefreshSessionRepository {
       [sessionId],
     );
     return result.rows[0];
+  }
+
+  async revokeSession(
+    sessionId: string,
+    client: DbClient,
+  ): Promise<RefreshSessionRow> {
+    const result = await this.getClient(client).query<RefreshSessionRow>(
+      `
+  UPDATE refresh_sessions
+  SET revoked_at = now()
+  WHERE id = $1
+    AND revoked_at IS null
+  RETURNING *
+   
+  `,
+      [sessionId],
+    );
+
+    if (!result.rows[0]) {
+      throw new Error('Session not found or already revoked');
+    }
+
+    return result.rows[0] ?? null;
   }
 }

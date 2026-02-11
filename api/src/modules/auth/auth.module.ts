@@ -7,14 +7,22 @@ import { AuthController } from './auth.controller';
 import { RefreshSessionRepository } from './refresh-session.repository';
 import { RefreshTokenRepository } from './refresh-token.repository';
 import { TokenService } from './token.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [MembershipsModule, OrganizationsModule, UsersModule],
+  imports: [
+    MembershipsModule,
+    OrganizationsModule,
+    UsersModule,
+    PassportModule,
+  ],
   providers: [
     AuthService,
     TokenService,
     RefreshSessionRepository,
     RefreshTokenRepository,
+    JwtStrategy,
   ],
   controllers: [AuthController],
 })

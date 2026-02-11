@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService, DbClient } from 'src/database/database.service';
 import { QueryResultRow } from 'pg';
-import { get } from 'http';
 
 interface OrganizationRow extends QueryResultRow {
   id: string;

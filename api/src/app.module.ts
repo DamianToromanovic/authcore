@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MembershipsModule } from './modules/memberships/memberships.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { UsersController } from './modules/users/users.controller';
 
 @Module({
   imports: [
@@ -19,5 +20,6 @@ import { OrganizationsModule } from './modules/organizations/organizations.modul
     MembershipsModule,
     OrganizationsModule,
   ],
+  controllers: [UsersController],
 })
 export class AppModule {}

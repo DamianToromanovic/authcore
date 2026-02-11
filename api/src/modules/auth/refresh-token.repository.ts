@@ -38,8 +38,11 @@ export class RefreshTokenRepository {
     return res.rows[0];
   }
 
-  async findRefreshTokenByJti(jti: string): Promise<RefreshTokenRow | null> {
-    const res = await this.db.query<RefreshTokenRow>(
+  async findRefreshTokenByJti(
+    jti: string,
+    client: DbClient,
+  ): Promise<RefreshTokenRow | null> {
+    const res = await this.getClient(client).query<RefreshTokenRow>(
       `
       SELECT *
       FROM refresh_tokens
@@ -54,8 +57,9 @@ export class RefreshTokenRepository {
   async revokeAndReplace(
     currentJti: string,
     replacedByJti: string,
+    client: DbClient,
   ): Promise<void> {
-    await this.db.query(
+    await this.getClient(client).query(
       `
       UPDATE refresh_tokens
       SET revoked_at = now(),
@@ -67,8 +71,11 @@ export class RefreshTokenRepository {
     );
   }
 
-  async revokeAllActiveForSession(sessionId: string): Promise<void> {
-    await this.db.query(
+  async revokeAllActiveForSession(
+    sessionId: string,
+    client: DbClient,
+  ): Promise<void> {
+    await this.getClient(client).query(
       `
       UPDATE refresh_tokens
       SET revoked_at = now()

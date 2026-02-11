@@ -20,7 +20,10 @@ export class UsersRepository {
     return client ?? this.db;
   }
 
-  async findByEmail(email: string, client?: DbClient): Promise<UserRow | null> {
+  async findActiveByEmail(
+    email: string,
+    client?: DbClient,
+  ): Promise<UserRow | null> {
     const result = await this.getClient(client).query<UserRow>(
       `
       SELECT *

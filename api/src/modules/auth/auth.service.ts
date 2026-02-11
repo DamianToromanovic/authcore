@@ -26,14 +26,14 @@ export class AuthService {
     return this.db.withTransaction(async (client) => {
       const hash = await bcrypt.hash(dto.password, 12);
 
-      // 1️⃣ create user
+      // create user
       const user = await this.usersRepo.createUser(dto.email, hash, client);
 
       if (!user) {
         throw new Error('User creation failed');
       }
 
-      // 2️⃣ create organization
+      // create organization
       const slug = dto.organizationName
         .trim()
         .toLowerCase()
@@ -50,7 +50,7 @@ export class AuthService {
         throw new Error('Organization creation failed');
       }
 
-      // 3️⃣ create membership
+      // create membership
       await this.membershipsRepo.createMembership(
         org.id,
         user.id,
@@ -67,7 +67,7 @@ export class AuthService {
 
   async loginUser(dto: LoginDto, userAgent: string | null, ip: string | null) {
     return this.db.withTransaction(async (client) => {
-      const user = await this.usersRepo.findByEmail(dto.email, client);
+      const user = await this.usersRepo.findActiveByEmail(dto.email, client);
 
       if (!user) {
         throw new Error('Invalid credentials');
@@ -114,6 +114,82 @@ export class AuthService {
         refreshToken: refresh.token,
         refreshExpiresAt: refresh.expiresAt,
       };
+    });
+  }
+
+  async refresh(refreshJwt: string) {
+    return this.db.withTransaction(async (client) => {
+      const claims = this.tokenService.verifyRefresh(refreshJwt);
+      const presentedHash = this.tokenService.hashToken(refreshJwt);
+
+      const dbToken = await this.tokens.findRefreshTokenByJti(
+        claims.jti,
+        client,
+      );
+
+      if (!dbToken) throw new Error('Invalid refresh token');
+
+      if (dbToken.revoked_at) {
+        await this.sessions.revokeSession(dbToken.session_id, client);
+        await this.tokens.revokeAllActiveForSession(dbToken.session_id, client);
+        throw new Error('Refresh token reuse detected');
+      }
+
+      if (dbToken.token_hash !== presentedHash) {
+        await this.sessions.revokeSession(dbToken.session_id, client);
+        await this.tokens.revokeAllActiveForSession(dbToken.session_id, client);
+        throw new Error('Invalid refresh token');
+      }
+
+      const session = await this.sessions.findActiveSessionById(
+        dbToken.session_id,
+        client,
+      );
+
+      if (!session) throw new Error('Session revoked');
+
+      // 🔥 ROTATION
+      const newJti = this.tokenService.newJti();
+
+      const newRefresh = this.tokenService.signRefresh({
+        sub: session.user_id,
+        sid: session.id,
+        jti: newJti,
+      });
+
+      const newHash = this.tokenService.hashToken(newRefresh.token);
+
+      await this.tokens.createRefreshToken(
+        newJti,
+        session.id,
+        newHash,
+        newRefresh.expiresAt,
+        client,
+      );
+
+      await this.tokens.revokeAndReplace(dbToken.jti, newJti, client);
+
+      const access = this.tokenService.signAccess({
+        sub: session.user_id,
+      });
+
+      return {
+        accessToken: access.token,
+        accessExpiresAt: access.expiresAt,
+        refreshToken: newRefresh.token,
+        refreshExpiresAt: newRefresh.expiresAt,
+      };
+    });
+  }
+
+  async logout(refreshJwt: string) {
+    return this.db.withTransaction(async (client) => {
+      const claims = this.tokenService.verifyRefresh(refreshJwt);
+
+      await this.sessions.revokeSession(claims.sid, client);
+      await this.tokens.revokeAllActiveForSession(claims.sid, client);
+
+      return true;
     });
   }
 }
