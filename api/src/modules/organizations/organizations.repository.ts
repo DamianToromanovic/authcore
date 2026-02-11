@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService, DbClient } from 'src/database/database.service';
 import { QueryResultRow } from 'pg';
+import { get } from 'http';
 
 interface OrganizationRow extends QueryResultRow {
   id: string;
@@ -15,11 +16,16 @@ interface OrganizationRow extends QueryResultRow {
 export class OrganizationsRepository {
   constructor(private readonly db: DatabaseService) {}
 
+  private getClient(client?: DbClient) {
+    return client ?? this.db;
+  }
+
   async createOrganization(
     name: string,
     slug: string,
+    client?: DbClient,
   ): Promise<OrganizationRow> {
-    const result = await this.db.query<OrganizationRow>(
+    const result = await this.getClient(client).query<OrganizationRow>(
       `
       INSERT INTO organizations (name, slug)
       VALUES ($1, $2)
